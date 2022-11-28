@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
+  async createUser(name: string, email: string, password: string) {
+    await this.checkUserExists(email);
+    const signupVerifyToken = uuid.v1()
+  }
+  //example
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
@@ -14,10 +18,6 @@ export class UsersService {
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
   }
 
   remove(id: number) {

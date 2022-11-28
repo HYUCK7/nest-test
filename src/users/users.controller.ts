@@ -19,14 +19,14 @@ import {
   UserLoginDto,
   VerifyEmailDto,
 } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {} // userService 를 컨트롤러에 주입한다.
   @Post()
   async createUser(@Body() dto: CreateUserDto): Promise<void> {
-    console.log(dto);
+    const { name, email, password } = dto; // dto에서 얻은 정보를 UserService에 전달한다.
+    await this.usersService.createUser(name, email, password);
   }
 
   @Post('/email-verify')
@@ -62,11 +62,11 @@ export class UsersController {
     }
     return this.usersService.findOne(+id);
   }
-  @HttpCode(202)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
+  // @HttpCode(202)
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  //   return this.usersService.update(+id, updateUserDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
