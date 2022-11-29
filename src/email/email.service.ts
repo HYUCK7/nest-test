@@ -1,7 +1,9 @@
 import Mail = require('nodemailer/lib/mailer');
 import * as nodemailer from 'nodemailer';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import emailConfig from 'src/config/emailConfig';
+import { ConfigType } from '@nestjs/config';
 
 interface EmailOptions {
   // 메일 옵션 타입
@@ -14,13 +16,17 @@ interface EmailOptions {
 export class EmailService {
   private transporter: Mail;
 
-  constructor() {
+  constructor(
+    // 주입 받을 땐 @Inject() 데코레이터의 토큰을 앞서 만든
+    // ConfigFactory의 KEY인 'email' 문자열로 넣어준다.
+    @Inject(emailConfig.KEY) private config: ConfigType<typeof emailConfig>,
+  ) {
     //nodeMailer에서 제공하는 transporter 객체.
     this.transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
-        user: '', //TODO : config
-        pass: '', // TODO : config
+        user: config.auth.user, //TODO : config
+        pass: config.auth.pass, // TODO : config
       },
     });
   }
@@ -28,7 +34,7 @@ export class EmailService {
     emailAddress: string,
     signupVerifyToken: string,
   ) {
-    const baseUrl = 'http://localhost:3000'; // TODO: config
+    const baseUrl = this.config.baseUrl; // TODO: config
     const url = `${baseUrl}/users/email-verify?signupVerifyToken=${signupVerifyToken}`;
     const mailOptions: EmailOptions = {
       to: emailAddress,

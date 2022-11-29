@@ -20,12 +20,13 @@ import {
   VerifyEmailDto,
 } from './dto/create-user.dto';
 import { UserInfo } from './UserInfo';
+import { ValidationPipe } from 'src/validation.pipe';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {} // userService 를 컨트롤러에 주입한다.
   @Post()
-  async createUser(@Body() dto: CreateUserDto): Promise<void> {
+  async createUser(@Body(ValidationPipe) dto: CreateUserDto): Promise<void> {
     const { name, email, password } = dto; // dto에서 얻은 정보를 UserService에 전달한다.
     await this.usersService.createUser(name, email, password);
   }

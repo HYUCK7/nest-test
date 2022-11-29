@@ -26,7 +26,10 @@ export class UsersService {
     return; // TODO: DB 연동 후 구현
   }
   private async sendMemberJoinEmail(email: string, signupVerifyToken: string) {
-    await this.emailService.sendMemberJoinEmail(email, signupVerifyToken);
+    await this.emailService.sendMemberJoinVerification(
+      email,
+      signupVerifyToken,
+    );
   }
   async verifyEmail(signupVerifyToken: string): Promise<string> {
     // TODO
